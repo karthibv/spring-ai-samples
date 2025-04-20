@@ -1,0 +1,1 @@
+What is the capital of {stateOrCountry}? Return only a JSON object like: `answer` — no explanations, no markdown.
