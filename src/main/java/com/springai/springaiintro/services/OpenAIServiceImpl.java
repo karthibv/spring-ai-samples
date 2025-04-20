@@ -3,10 +3,7 @@ package com.springai.springaiintro.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springai.springaiintro.model.Answer;
-import com.springai.springaiintro.model.GetCapitalRequest;
-import com.springai.springaiintro.model.GetCapitalResponse;
-import com.springai.springaiintro.model.Question;
+import com.springai.springaiintro.model.*;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -30,6 +27,9 @@ public class OpenAIServiceImpl implements OpenAIService {
 
     @Value("classpath:templates/get-capital-format.st")
     private Resource getCapitalWithFormatPrompt;
+
+    @Value("classpath:templates/get-capital-format-detail.st")
+    private Resource getCapitalWithDetailedFormatPrompt;
 
     @Value("classpath:templates/get-capital-with-info.st")
     private Resource getGetCapitalPromptWithInfo;
@@ -57,6 +57,20 @@ public class OpenAIServiceImpl implements OpenAIService {
         ChatResponse response = chatModel.call(prompt);
         return new Answer(response.getResult().getOutput().getText());
     }
+
+    public GetCapitalDetailedResponse getCapitalWithDetailedFormat(GetCapitalRequest getCapitalRequest) {
+        BeanOutputConverter<GetCapitalDetailedResponse> converter = new BeanOutputConverter<>(GetCapitalDetailedResponse.class);
+        String detailedFormat = converter.getFormat();
+        System.out.println("Format: " + detailedFormat);
+        PromptTemplate promptTemplate = new PromptTemplate(getCapitalWithDetailedFormatPrompt);
+        Prompt prompt = promptTemplate.create(Map.of("stateOrCountry", getCapitalRequest.stateOrCountry(),
+                "format", detailedFormat));
+
+        ChatResponse response = chatModel.call(prompt);
+        System.out.println("Response: " + response.getResult().getOutput().getText());
+        return converter.convert(response.getResult().getOutput().getText());
+    }
+
 
     public GetCapitalResponse getCapitalWithFormat(GetCapitalRequest getCapitalRequest) {
         BeanOutputConverter<GetCapitalResponse> converter = new BeanOutputConverter<>(GetCapitalResponse.class);

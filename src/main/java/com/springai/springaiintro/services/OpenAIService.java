@@ -1,9 +1,6 @@
 package com.springai.springaiintro.services;
 
-import com.springai.springaiintro.model.Answer;
-import com.springai.springaiintro.model.GetCapitalRequest;
-import com.springai.springaiintro.model.GetCapitalResponse;
-import com.springai.springaiintro.model.Question;
+import com.springai.springaiintro.model.*;
 
 public interface OpenAIService {
     String getAnswer(String question);
@@ -13,6 +10,8 @@ public interface OpenAIService {
     Answer getCapital(GetCapitalRequest getCapitalRequest);
 
     GetCapitalResponse getCapitalWithFormat(GetCapitalRequest getCapitalRequest);
+
+    GetCapitalDetailedResponse getCapitalWithDetailedFormat(GetCapitalRequest getCapitalRequest);
 
     Answer getCapitalWithInfo(GetCapitalRequest getCapitalRequest);
 
